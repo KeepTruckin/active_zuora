@@ -8,10 +8,9 @@ module ActiveZuora
     end
 
     def build_xml(xml, soap, value, options={})
-      # All dates need to be in PST time.  Since all user-set attributes
-      # in Zuora are really only dates, we'll chop off the time.
+      # All times need to be in PST time.
       # 2012-05-22T00:00:00-08:00
-      value = value ? value.strftime("%Y-%m-%dT00:00:00-08:00") : ''
+      value = value ? value.in_time_zone('Pacific Time (US & Canada)').iso8601 : ''
       super(xml, soap, value, options)
     end
 
