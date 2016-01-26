@@ -25,14 +25,14 @@ module ActiveZuora
 
       if result[:success]
         clear_changed_attributes
-        filtered_invoice_items = self.result[:invoice_item].map do |invoice_item|
+        filtered_invoice_items = (self.result[:invoice_item] || []).map do |invoice_item|
           #Filter out data in the return value that are not valid invoice item fields such as
           #    :"@xmlns:ns2"=>"http://object.api.zuora.com/",
           #    :"@xmlns:xsi"=>"http://www.w3.org/2001/XMLSchema-instance",
           #    :"@xsi:type"=>"ns2:InvoiceItem"
-          invoice_item.select{|key, v| ActiveZuora::InvoiceItem.field_names.include?(key)}
+          invoice_item.select{|key, v| self.class.nested_class_name('InvoiceItem').constantize.field_names.include?(key)}
         end
-        ActiveZuora::BillingPreviewResult.new(self.result.merge(invoice_item: filtered_invoice_items))
+        self.class.nested_class_name('BillingPreviewResult').constantize.new(self.result.merge(invoice_item: filtered_invoice_items))
       else
         add_zuora_errors(result[:errors])
         false

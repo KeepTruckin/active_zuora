@@ -195,8 +195,7 @@ module ActiveZuora
 
       customize 'RatePlanCharge' do
         include LazyAttr
-        exclude_from_queries :overage_price, :included_units,
-          :discount_amount, :discount_percentage, :rollover_balance, :price
+        exclude_from_queries :overage_price, :included_units, :discount_amount, :discount_percentage, :rollover_balance, :price, :revenue_recognition_rule_name
         lazy_load :price
       end
 
