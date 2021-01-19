@@ -39,7 +39,11 @@ module ActiveZuora
     def untracked_attributes=(attributes)
       # Loads attributes without tracking dirt.
       self.attributes = attributes
-      clear_changed_attributes
+      if ActiveSupport.version.to_s.to_f >= 5.2
+        clear_changes_information
+      else
+        changed_attributes.clear
+      end
       attributes
     end
 
